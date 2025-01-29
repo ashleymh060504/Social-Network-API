@@ -5,6 +5,7 @@ interface IThought extends Document {
     createdAt: Date;
     username: string;
     reactions: string[];
+    formattedCreatedAt: string;
 }
 
 const ThoughtSchema = new Schema<IThought>(
@@ -17,8 +18,7 @@ const ThoughtSchema = new Schema<IThought>(
         },
         createdAt: {
             type: Date,
-            default: Date.now,
-            // get: (timestamp: Date) => dateFormat(timestamp)
+            default: Date.now
         },
         username: {
             type: String,
@@ -33,6 +33,19 @@ const ThoughtSchema = new Schema<IThought>(
     });
 ThoughtSchema.virtual('reactionCount').get(function (this: IThought) {
     return this.reactions.length;
+});
+
+ThoughtSchema.virtual('formattedCreatedAt').get(function (this: IThought) {
+    const date = this.createdAt;
+    
+    const day = date.getDate(); 
+    const month = date.toLocaleString('default', { month: 'long' }); 
+    const year = date.getFullYear(); 
+
+    const hours = String(date.getHours()).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0'); 
+
+    return `${month} ${day}, ${year} ${hours}:${minutes}`; 
 });
 
 const Thought = model<IThought>('Thought', ThoughtSchema);

@@ -5,6 +5,7 @@ interface IReaction extends Document {
     reactionBody: string;
     username: string;
     createdAt: Date;
+    formattedCreatedAt: string;
 }
 
 const ReactionSchema = new Schema<IReaction>(
@@ -25,7 +26,21 @@ const ReactionSchema = new Schema<IReaction>(
         createdAt: {
             type: Date,
             default: Date.now,
-            // get: (timestamp: Date) => dateFormat (timestamp)
         }
-})
+});
+
+ReactionSchema.virtual('formattedCreatedAt').get(function (this: IReaction) {
+    const date = this.createdAt;
+    
+    const day = date.getDate(); 
+    const month = date.toLocaleString('default', { month: 'long' }); 
+    const year = date.getFullYear(); 
+
+    const hours = String(date.getHours()).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0'); 
+
+    return `${month} ${day}, ${year} ${hours}:${minutes}`; 
+});
+
+
 
