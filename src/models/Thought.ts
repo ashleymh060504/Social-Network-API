@@ -1,6 +1,6 @@
 import { Schema, model, type Document } from 'mongoose';
 
-interface IThought extends Document {
+export interface IThought extends Document {
     thoughtText: string;
     createdAt: Date;
     username: string;
@@ -48,6 +48,4 @@ ThoughtSchema.virtual('formattedCreatedAt').get(function (this: IThought) {
     return `${month} ${day}, ${year} ${hours}:${minutes}`; 
 });
 
-const Thought = model<IThought>('Thought', ThoughtSchema);
-
-export default Thought;
+export default mongoose.model<IThought>('Thought', ThoughtSchema);;

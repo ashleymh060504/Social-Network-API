@@ -1,10 +1,10 @@
-import { Schema, model, type Document } from 'mongoose';
+import mongoose, { Schema, model, type Document } from 'mongoose';
 
-interface IUser extends Document {
+export interface IUser extends Document {
     username: string;
     email: string;
     thoughts: string[];
-    friends: string[];
+    friends: IUser[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -39,6 +39,4 @@ UserSchema.virtual('friendCount').get(function (this: IUser) {
     return this.friends.length;
 }); 
 
-const User = model<IUser>('User', UserSchema);
-
-export default User;
+export default mongoose.model<IUser>('User', UserSchema);;
